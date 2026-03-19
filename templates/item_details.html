@@ -2,7 +2,10 @@
 {% block body %}
 <div class="item-detail-container">
     <div class="item-detail-image">
-        <img class="product-img" src="{{display_item.imgurl}}" alt="{{display_item.name}}">
+        <div class="sprite-wrapper large">
+            <img class="product-img tilt-sprite" src="{{display_item.imgurl}}" alt="{{display_item.name}}">
+            <div class="sprite-shadow large"></div>
+        </div>
     </div>
     
     <div class="item-detail-info">
@@ -35,4 +38,111 @@
 <div class="back-link">
     <a href="/items" class="btn btn-default">&larr; Back to All Items</a>
 </div>
+
+<script>
+(function () {
+    "use strict";
+
+    // Configuration - even more dramatic for the detail page since image is larger
+    var MAX_DISTANCE = 350;   // px – larger range for bigger image
+    var MAX_ANGLE    = 35;    // degrees – maximum tilt
+    var MAX_LIFT     = 20;    // px – how much the sprite lifts toward cursor
+    var MAX_SCALE    = 1.08;  // scale factor when cursor is closest (subtle for large image)
+
+    var sprites = document.querySelectorAll(".tilt-sprite");
+
+    function getCenter(el) {
+        var r = el.getBoundingClientRect();
+        return {
+            x: r.left + r.width  / 2,
+            y: r.top  + r.height / 2
+        };
+    }
+
+    function handleMove(e) {
+        var mx = e.clientX;
+        var my = e.clientY;
+
+        for (var i = 0; i < sprites.length; i++) {
+            var sprite = sprites[i];
+            var wrapper = sprite.closest(".sprite-wrapper");
+            var shadow = wrapper ? wrapper.querySelector(".sprite-shadow") : null;
+            
+            var c    = getCenter(sprite);
+            var dx   = mx - c.x;
+            var dy   = my - c.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist > MAX_DISTANCE) {
+                // Reset to resting position
+                sprite.style.transform = "perspective(600px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)";
+                if (shadow) {
+                    shadow.style.opacity = "0.2";
+                    shadow.style.transform = "translateX(0px) translateY(0px) scale(1)";
+                    shadow.style.filter = "blur(8px)";
+                }
+                continue;
+            }
+
+            // Calculate intensity factor (1 when cursor at center, 0 at MAX_DISTANCE)
+            var factor = 1 - dist / MAX_DISTANCE;
+            var factorEased = factor * factor; // Ease-in for more dramatic close-up effect
+
+            // Calculate rotations - tilt TOWARD the cursor
+            var rotateY =  (dx / MAX_DISTANCE) * MAX_ANGLE * factor;
+            var rotateX = -(dy / MAX_DISTANCE) * MAX_ANGLE * factor;
+
+            // Calculate lift (moves toward cursor slightly)
+            var liftX = (dx / MAX_DISTANCE) * MAX_LIFT * factorEased;
+            var liftY = (dy / MAX_DISTANCE) * MAX_LIFT * factorEased;
+
+            // Calculate scale
+            var scale = 1 + (MAX_SCALE - 1) * factorEased;
+
+            sprite.style.transform =
+                "perspective(600px) " +
+                "rotateX(" + rotateX.toFixed(2) + "deg) " +
+                "rotateY(" + rotateY.toFixed(2) + "deg) " +
+                "translate(" + liftX.toFixed(2) + "px, " + liftY.toFixed(2) + "px) " +
+                "scale(" + scale.toFixed(3) + ")";
+
+            // Animate shadow to create 3D depth effect
+            if (shadow) {
+                // Shadow moves opposite to the tilt direction
+                var shadowX = -(dx / MAX_DISTANCE) * 25 * factor;
+                var shadowY = (dy / MAX_DISTANCE) * 15 * factor + 15;
+                var shadowScale = 0.8 + 0.35 * factor;
+                var shadowBlur = 8 + 20 * factorEased;
+                var shadowOpacity = 0.2 + 0.4 * factorEased;
+
+                shadow.style.opacity = shadowOpacity.toFixed(2);
+                shadow.style.transform = 
+                    "translateX(" + shadowX.toFixed(2) + "px) " +
+                    "translateY(" + shadowY.toFixed(2) + "px) " +
+                    "scale(" + shadowScale.toFixed(3) + ")";
+                shadow.style.filter = "blur(" + shadowBlur.toFixed(1) + "px)";
+            }
+        }
+    }
+
+    function handleLeave() {
+        for (var i = 0; i < sprites.length; i++) {
+            var sprite = sprites[i];
+            var wrapper = sprite.closest(".sprite-wrapper");
+            var shadow = wrapper ? wrapper.querySelector(".sprite-shadow") : null;
+
+            sprite.style.transform = "perspective(600px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)";
+            
+            if (shadow) {
+                shadow.style.opacity = "0.2";
+                shadow.style.transform = "translateX(0px) translateY(0px) scale(1)";
+                shadow.style.filter = "blur(8px)";
+            }
+        }
+    }
+
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseleave", handleLeave);
+})();
+</script>
 {% endblock %}
