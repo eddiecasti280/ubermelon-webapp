@@ -8,7 +8,7 @@
     <div class="item-summary well">
         <h3><a href="/item/{{item.id}}">{{item.name}}</a></h3>
         <a href="/item/{{item.id}}">
-            <img src="{{item.imgurl}}" alt="{{item.name}}" class="item-image">
+            <img src="{{item.imgurl}}" alt="{{item.name}}" class="item-image tilt-sprite">
         </a>
         <p class="category-badge">{{item.category}}</p>
         <h4>{{item.price_str()}}</h4>
@@ -26,4 +26,57 @@
         from <a href="https://melancholyg.itch.io/16x16-pixel-art-food-sprites" target="_blank">itch.io</a>
     </p>
 </div>
+
+<script>
+(function () {
+    "use strict";
+
+    var MAX_DISTANCE = 220;   // px – beyond this the sprite is at rest
+    var MAX_ANGLE    = 18;    // degrees – maximum tilt
+
+    var sprites = document.querySelectorAll(".tilt-sprite");
+
+    function getCenter(el) {
+        var r = el.getBoundingClientRect();
+        return {
+            x: r.left + r.width  / 2,
+            y: r.top  + r.height / 2
+        };
+    }
+
+    function handleMove(e) {
+        var mx = e.clientX;
+        var my = e.clientY;
+
+        for (var i = 0; i < sprites.length; i++) {
+            var sprite = sprites[i];
+            var c      = getCenter(sprite);
+            var dx     = mx - c.x;
+            var dy     = my - c.y;
+            var dist   = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist > MAX_DISTANCE) {
+                sprite.style.transform = "perspective(300px) rotateX(0deg) rotateY(0deg)";
+                continue;
+            }
+
+            var factor = 1 - dist / MAX_DISTANCE;          // 1 at center → 0 at edge
+            var rotateY =  (dx / MAX_DISTANCE) * MAX_ANGLE * factor;
+            var rotateX = -(dy / MAX_DISTANCE) * MAX_ANGLE * factor;
+
+            sprite.style.transform =
+                "perspective(300px) rotateX(" + rotateX.toFixed(2) + "deg) rotateY(" + rotateY.toFixed(2) + "deg)";
+        }
+    }
+
+    function handleLeave() {
+        for (var i = 0; i < sprites.length; i++) {
+            sprites[i].style.transform = "perspective(300px) rotateX(0deg) rotateY(0deg)";
+        }
+    }
+
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseleave", handleLeave);
+})();
+</script>
 {% endblock %}
