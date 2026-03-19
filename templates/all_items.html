@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Our Food Selection</h2>
+<p class="lead">Fresh ingredients and prepared foods for every occasion.</p>
+
+<div id="item-list">
+    {% for item in item_list %}
+    <div class="item-summary well">
+        <h3><a href="/item/{{item.id}}">{{item.name}}</a></h3>
+        <a href="/item/{{item.id}}">
+            <img src="{{item.imgurl}}" alt="{{item.name}}" class="item-image">
+        </a>
+        <p class="category-badge">{{item.category}}</p>
+        <h4>{{item.price_str()}}</h4>
+        <div class="item-actions">
+            <a class="btn btn-primary btn-sm" href="/item/{{item.id}}">Details</a>
+            <a class="btn btn-success btn-sm" href="/add_to_cart/{{item.id}}">Add to Cart</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="credits-footer">
+    <p>
+        Food sprites by <a href="https://melancholyg.itch.io/" target="_blank">MelancholyG</a>
+        from <a href="https://melancholyg.itch.io/16x16-pixel-art-food-sprites" target="_blank">itch.io</a>
+    </p>
+</div>
+{% endblock %}

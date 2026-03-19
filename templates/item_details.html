@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="item-detail-container">
+    <div class="item-detail-image">
+        <img class="product-img" src="{{display_item.imgurl}}" alt="{{display_item.name}}">
+    </div>
+    
+    <div class="item-detail-info">
+        <h2>{{ display_item.name }}</h2>
+        <span class="category-badge large">{{ display_item.category }}</span>
+        
+        <div class="price-section well">
+            <h3>Price</h3>
+            <p class="price">{{ display_item.price_str() }}</p>
+            {% if display_item.in_stock %}
+                <span class="stock-status in-stock">✓ In Stock</span>
+                <a class="btn btn-success btn-lg" href="/add_to_cart/{{display_item.id}}">
+                    Add to Cart
+                </a>
+            {% else %}
+                <span class="stock-status out-of-stock">✗ Out of Stock</span>
+                <button class="btn btn-default btn-lg" disabled>
+                    Currently Unavailable
+                </button>
+            {% endif %}
+        </div>
+        
+        <div class="description-section">
+            <h3>Description</h3>
+            <p>{{ display_item.description }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="back-link">
+    <a href="/items" class="btn btn-default">&larr; Back to All Items</a>
+</div>
+{% endblock %}

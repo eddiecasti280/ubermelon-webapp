@@ -1,5 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Food Shop - Fresh Food Delivered</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/css/style.css" />
     </head>
@@ -7,13 +11,24 @@
         <div class="navbar navbar-inverse navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
-                    <img src="/static/img/ubermelonsmall.png"><a class="navbar-brand" href="/">Ubermelon</a>
+                    <a class="navbar-brand" href="/">
+                        <img src="/static/img/sprites/red_apple.png" alt="Food Shop Logo" class="brand-logo">
+                        Food Shop
+                    </a>
                 </div>
                 <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/items">Browse Items</a></li>
+                    </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/cart"><img class="melon-cart" src="/static/img/watermelon.png"> My Melon Cart</a></li>
+                        <li>
+                            <a href="/cart">
+                                <img class="cart-icon" src="/static/img/sprites/cheese.png" alt="Cart"> 
+                                My Cart
+                            </a>
+                        </li>
                         {% if 'name' in session %}
-                            {{ session['name'] }}
+                            <li class="navbar-text">Welcome, {{ session['name'] }}</li>
                             <li><a href="/logout">Log Out</a></li>
                         {% else %}
                             <li><a href="/login">Log In</a></li>
@@ -22,17 +37,34 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="container main-content">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
-            {% for message in messages %}
-            <ul class="flashes">
-                <li>{{message}}</li>
-            </ul>
-            {% endfor %}
+                {% for message in messages %}
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
             {% endif %}
             {% endwith %}
             {% block body %}{% endblock %}
         </div>
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">
+                    &copy; 2024 Food Shop. All rights reserved.
+                </p>
+                <p class="text-muted credits">
+                    Pixel art food sprites by 
+                    <a href="https://melancholyg.itch.io/" target="_blank" rel="noopener noreferrer">MelancholyG</a>
+                    from <a href="https://melancholyg.itch.io/16x16-pixel-art-food-sprites" target="_blank" rel="noopener noreferrer">itch.io</a>.
+                </p>
+            </div>
+        </footer>
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     </body>
 </html>

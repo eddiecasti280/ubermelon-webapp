@@ -1,154 +1,220 @@
-Tying It All Together
-=====================
-This repo contains a partially functioning version of the Ubermelon web app. While it is reasonably well constructed, there are a few bugs and unimplemented features, the repair of which will demonstrate some of the subtleties of working within a web framework.
+# Food Shop
 
-Getting Set Up
---------------
-The very first thing to do is clone this repository in the usual manner. Then, follow these steps to get set up.
+A Flask-based e-commerce demo application for selling food items. This project showcases basic web application functionality including product listings, shopping cart management, and user sessions.
 
-1. Create and activate a new, empty virtual environment.
-2. Use pip to install the packages required in requirements.txt ([full tutorial on pip/virtualenv](http://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/))
-3. Start the application by running `python melons.py`.
+![Food Shop](static/img/sprites/red_apple.png)
 
-Navigate to [http://localhost:5000](http://localhost:5000) and start exploring the app.
+## Features
 
-How to Explore
---------------
-Our application follows the [model-view-controller pattern](http://en.wikipedia.org/wiki/Model-view-controller). Briefly, the app is divided into three sections, each with its own responsibility. The model is our database, its chief function is to store and retrieve data from long-term permanent storage.
+- **Product Catalog**: Browse a variety of food items organized by category
+- **Product Details**: View detailed information about each item
+- **Shopping Cart**: Add items to cart, adjust quantities, and manage your order
+- **User Sessions**: Log in to personalize your experience
+- **Flash Messages**: Receive feedback on your actions
+- **Responsive Design**: Works on desktop and mobile devices
 
-The view of our application is also sometimes called the 'presentation layer'. This code is primarily concerned with how to display data back to the user. These are our .html template files.
+## Asset Credits
 
-Lastly, the controller is the mechanism that listens for data requests from the user, asks the model for the appropriate data (or to store new data), then delivers its findings to the view. Our controllers are found in the file `melons.py`. In this case, our controllers also dictate which URLs are available to the user.
+All pixel art food sprites used in this project are created by **MelancholyG**.
 
-Because the controller is the piece that ties all of the components together, it will be our most important file. It will be the hub from which we explore the rest of the codebase. The gist of all of the above is that the code to generate any given page in our browser will be spread across three, or maybe even four files. However, it is straightforward enough to take a page and find the code that matches it.
+- **Artist Profile**: [https://melancholyg.itch.io/](https://melancholyg.itch.io/)
+- **Asset Page**: [16x16 Pixel Art Food Sprites](https://melancholyg.itch.io/16x16-pixel-art-food-sprites)
 
-1. Get the URL of the page.
-2. Locate the function attached to the URL in `melons.py`.
-3. Any model-related function calls will be made from this function, prefixed by the module `model`. (eg: `model.get_melons()`) These functions are located in `model.py`.
-4. The template name (html file) will usually be located in the return statement for the function, as part of a `render_template()` call.
-5. From the template, we can locate any .css files or images relevant to our problem.
+Please support the artist if you use these assets in your own projects!
 
-Remember, each file has a specific responsibility, so even though you have more than one file open, it is straightforward enough to decide which file to be in.
+## Installation
 
-Task 1: Taking Stock
---------------------
-Your first task is to explore the app from within your browser. The goal is to understand how the app is laid out. For each page, try to identify the following (and write it down somewhere)
+### Prerequisites
 
-1. The controller function attached to each page
-2. The model function calls (if any) for a given page
-3. The template for a page
+- Python 3.8 or higher
+- pip (Python package installer)
+- Virtual environment (recommended)
 
-As you do this, watch out for a number of specific things.
+### Step-by-Step Setup
 
-### Variable Names in Templates
-Try to make sure you understand the source of all the variables that are being used in the .html templates. Whenever you see a `{{ var }}` in a template, make sure that you can match the variable listed with one coming from your model.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd food_shop
 
-### The Melon Detail Template
-You'll notice that the melon detail page uses an `{% if %}` statement to display whether or not a given melon is seedless. Remember this syntax from our earlier Jinja lesson. In addition to giving us a mechanism for inserting placeholders into our HTML, it also gives us a few control structures, like if-statements and for-loops. We can use this to make the contents of our page a little more dynamic.
+    Create and activate a virtual environment
 
-[Jinja if-statement documentation](http://jinja.pocoo.org/docs/templates/#if)
+    On macOS/Linux:
 
-### The Melon List Template
-The template for our melon list has an example of a Jinja `{% for %}` loop as well.
+    bash
+    python3 -m venv venv
+    source venv/bin/activate
 
-[Jinja for-loop documentation](http://jinja.pocoo.org/docs/templates/#for)
+    On Windows:
 
-### Sparse Templates
-You'll see that some of the provided templates are very sparse. This is because for the most part, each page has the same HTML as all the other pages. In the spirit of not repeating ourselves, Jinja provides a mechanism to take the common parts of a template out and move it to a 'skeleton' template that is shared across pages. In our case, the skeleton is `base.html`. As you fix various bugs, you may find that some of the bugs reside in the base template and not the page template.
+    bash
+    python -m venv venv
+    venv\Scripts\activate
 
-[Jinja template inheritance documentation](http://jinja.pocoo.org/docs/templates/#template-inheritance)
+    Install dependencies
 
-### Static Files
-If you try to access the html templates directly in your browser, ie: navigate over to [http://localhost:5000/templates/all_melons.html](http://localhost:5000/templates/all_melons.html), you will get a 404 error. This is because templates have to be preprocessed before they can be displayed. They have to be run through a controller for all the placeholder variables to be replaced.
+    bash
+    pip install -r requirements.txt
 
-However, you can access [http://localhost:5000/static/img/ubermelonsmall.png](http://localhost:5000/static/img/ubermelonsmall.png) without any issue. This is because the ubermelon logo resides in a special directory called `static`. Files that go in this directory are available to the browser without any preprocessing. This makes sense for files like images or stylesheets that don't change: static files.
+    Place the sprite sheet
 
-### The Checkout Button
-Checking out our shopping cart is outside the scope of our task, but it is worth noting the 'message flash' mechanism that is used when you try to check out. It is a way to display one-time messages to the user. This is a great place to place error, warning, or success messages. Flashed messages only display once, if you reload the page, you will see that it disappears on the second view.
+    Place the Foods.png sprite sheet (128x96 pixels, 16x16 sprites) in the static/img/ directory.
 
-[Flask Message Flashing documentation](http://flask.pocoo.org/docs/patterns/flashing/)
+    Parse the sprites
 
-### Styling
-Most of the style work in our app was not written manually. Instead, we used [bootstrap](http://getbootstrap.com/getting-started/#examples), a css framework. The bootstrap framework specifies 'components', higher level UI components composed of more basic HTML tags. Notably, we use the `navbar` component and the `well` component.
+    bash
+    python parse_sprites.py
 
-[Bootstrap component list](http://getbootstrap.com/components/)
+    This will extract individual sprite images to static/img/sprites/.
 
-Task 2: The Login Page
-----------------------
-If you click on the 'Log In' link in the nav bar at the top of the screen, you'll see that it does nothing. However, if you peruse the list of routes available in your `melons.py` file, you will find that there is a login route that is inaccessible by clicking. You can, however, browse on over to the URL directly in your browser.
+    Initialize the database
 
-###Fixing this bug
-1.  Wire up the link to go to the page. 
+    bash
+    python init_db.py
 
-    Your first task is to locate the `<a href>` tag that is used in the black bar at the top of the page. This section of the page is typically called the navbar. It may be tricky at first to find where in the code this tag exists. Remember to use the browser's element inspector to see exactly what lines of HTML you're looking for. Also remember that this part of the page is shared across multiple pages.
+    This creates food.db with all the food items.
 
-2.  Style the page. 
+Running the Application
+Development Mode
 
-    When you _do_ have the login page 'wired up', you'll notice that it's styled pretty terribly. We want it to use the same style as all the other pages. We could try to add bootstrap to the HTML directly, but it is easier to make this page a child of our `base.html` template. Check either `melon_details.html` or `all_melons.html` for an example on how to do that.
+bash
+python app.py
 
-Task 3: The Melon Cart Icon
----------------------------
-The melon cart link at the top of the page has a broken image. If you browse around our directory tree, you'll find that the file exists, but isn't linked properly.
+The application will start on http://localhost:5000.
+With Custom Port
 
-###Fixing this bug
-1.  First, fix the link. 
+bash
+PORT=8080 python app.py
 
-    Make sure you understand why it's not displaying in the first place.
+Using Flask CLI
 
-2.  Style this component. 
+bash
+export FLASK_APP=app.py
+export FLASK_ENV=development
+flask run
 
-    Find the stylesheet that's being used and fiddle with the style to make it display correctly. A height of 15px on this image should do it. Try to figure out a CSS selector that targets just that image without affecting others. Here's a [css selector guide](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_started/Selectors) if you need help.
+Project Structure
 
-Task 4: The Melon Cart Functionality
-------------------------------------
-When you view the shopping cart, you'll notice that all the items in it are placeholder dummy items. We'll need to replace these items with actual melons. In addition, the 'Add to Cart' button on the melon detail page is wired up but the controller currently doesn't do anything.
+food_shop/
+├── app.py              # Main Flask application
+├── model.py            # Database models and queries
+├── init_db.py          # Database initialization script
+├── parse_sprites.py    # Sprite sheet parser
+├── food.db             # SQLite database (generated)
+├── requirements.txt    # Python dependencies
+├── Procfile            # For deployment (Heroku, etc.)
+├── README.md           # This file
+├── static/
+│   ├── css/
+│   │   ├── style.css   # Main stylesheet
+│   │   └── cover.css   # Landing page styles
+│   └── img/
+│       ├── Foods.png   # Original sprite sheet
+│       └── sprites/    # Extracted sprites (generated)
+└── templates/
+    ├── base.html       # Base template with navbar/footer
+    ├── index.html      # Landing page
+    ├── all_items.html  # Product listing page
+    ├── item_details.html # Single product view
+    ├── cart.html       # Shopping cart
+    └── login.html      # Login form
 
-We need a way to temporarily hold information that the user generates (ie: which melons are in the cart). We could commit this to the database, but this isn't long-term information, nor is it information that's attached to any particular user. It's short-term information that's attached to the browser you're currently using. This kind of information is best stored in a storage mechanism called 'the session'. We will use the session to carry information from clicking the 'Add to Cart' button all the way to the shopping cart page.
+Usage Guide
+Browsing Items
 
-Read the [Session documentation](http://flask.pocoo.org/docs/quickstart/#sessions) to figure out how to import `session` from Flask and use it (hint: look for where we define a `secret key`, and once everything is set up, try to put something in the session and then print it out).
+    Visit the homepage and click "Shop Now"
+    Browse items by scrolling through the product grid
+    Click on any item to see its details
 
-###Implementing a Cart Feature using the Session
-This feature is two-part. The order in which you build the feature doesn't matter, but it may be helpful to write both in conjunction.
+Adding to Cart
 
-1.  Add things to the cart. 
+    Click "Add to Cart" on any product
+    You'll be redirected to your cart with a confirmation message
+    Adding the same item again increases its quantity
 
-    When you click the `add to cart` button, the fact that a melon has been added to a "cart" needs to be recorded somewhere. Breaking down the process, here are the necessary pieces:
-    1. On adding an item, check to see if the session contains a cart already
-    2. If not, add a new cart (an empty list) to the session
-    3. Append the melon id under consideration to our cart list
-    4. Flash a message indicating the melon was successfully added to the cart
-    5. Redirect the user to the shopping cart page
+Managing Cart
 
-2.  Display the cart contents.
-    
-    Displaying the contents of the cart is a little simpler, but is an exercise in fiddling with Jinja templates and HTML tags. Essentially, in our shopping cart page, we will loop through all the melons in our cart and display them in a table.
-    1. In our cart controller, get a list of melon ids in the cart out of the session (if it exists)
-    2. Query the database for all melons that match the ids in the list
-    3. Pass the list of melons on to the shopping cart template
-    4. In the shopping cart template, delete the placeholder rows
-    5. Use a jinja for loop to iterate through the melon list, outputting each melon to the table in place of the original placeholders.
+    View your cart by clicking "My Cart" in the navigation
+    Remove items using the "Remove" button
+    Clear all items with "Clear Cart"
+    Proceed to checkout (demo only - no actual payment)
 
-With each part of the feature being reasonably complex, it makes sense to do them in stages. For example, you might go through this sequence instead:
+User Login
 
-1. On adding an item, add some arbitrary string to the session
-2. In the shopping cart page, add some code to display the string from the session.
-3. Going back to the `add_to_cart` controller, replace the string with the actual melon object
-4. Going back to the shopping cart page, rewrite the page to display the single melon object
-5. In the `add_to_cart` controller, replace the single melon with a melon list...
+    Click "Log In" in the navigation
+    Enter any name, email, and password
+    Note: This is a demo - no actual authentication is performed
 
-And so on.
+Notes
 
-####You're Done!
-Get a code review, stretch, drink some water, and high five. If you have extra time or want to pursue further on your own, here are some extra credit tasks:
+    No Payment Processing: The checkout feature is a placeholder. No actual payments are processed.
+    Session Storage: Cart data is stored in browser sessions and will be lost when the session expires.
+    Demo Authentication: The login system stores user info in the session without validation.
 
-Extra Credit: Log In
---------------------
-We'll implement a very simple login feature (that doesn't do anything) using all the same mechanisms we've seen until now. Exactly 'which user is logged in right now' is a good candidate for being stored in the session, as it's very browser-specific information. The general procedure is as follows:
+Development
+Adding New Items
 
-1. When the user submits the login form, the email address and password get sent to the `process_login` controller.
-2. From the `process_login` controller, we can extract the form fields from the [request object](http://flask.pocoo.org/docs/quickstart/#the-request-object).
-3. We can use the submitted email to look up whether or not that user exists in the database (fill in the details of the `Customer` class and the `get_customer_by_email` function).
-4. If the customer exists, store the customer in the session. For this exercise, we will ignore whether or not the password matches.
-5. In our templates, if a customer is logged in (ie: they exist in the session), display their name and an option to log out instead of the login link.
-6. Flash a login successful message.
-7. Redirect the user to the main melon listings.
+Edit init_db.py and add new entries to the food_items list:
+
+python
+("Category", "Item Name", 9.99, "/static/img/sprites/image.png",
+ "Description of the item."),
+
+Then re-run the initialization:
+
+bash
+python init_db.py
+
+Modifying Styles
+
+    static/css/style.css - Main application styles
+    static/css/cover.css - Landing page styles
+
+Template Inheritance
+
+All pages extend base.html which provides:
+
+    Navigation bar
+    Flash message display
+    Footer with credits
+    Common CSS/JS includes
+
+License
+
+This project is for educational/demonstration purposes.
+
+Pixel art assets are © MelancholyG - please check the original asset page for licensing terms.
+
+
+---
+
+## Summary of Changes Made
+
+1. **Fixed the error**: In `login.html`, changed `type="btn btn-lg btn-primary btn-block"` to `class="btn btn-lg btn-primary btn-block"`
+
+2. **Updated Python 2 syntax**: Changed `print melons` to `print()` function calls in `model.py`
+
+3. **Renamed files**:
+   - `melons.py` → `app.py`
+   - `all_melons.html` → `all_items.html`
+   - `melon_details.html` → `item_details.html`
+   - Database: `melons.db` → `food.db`
+
+4. **Created new files**:
+   - `parse_sprites.py` - Extracts individual sprites from the sprite sheet
+   - `init_db.py` - Initializes the database with food items
+
+5. **Re-themed everything**:
+   - Updated all "melon" references to "food"/"item"
+   - Updated branding from "Ubermelon" to "Food Shop"
+   - Added artist credits throughout
+
+6. **Implemented missing features**:
+   - Cart removal functionality (`/remove_from_cart/<index>`)
+   - Cart clearing functionality (`/clear_cart`)
+   - Proper session modification tracking
+   - 404 error handling
+   - Stock status display
+
+7. **Updated requirements.txt** for Python 3 and added Pillow for sprite parsing
+

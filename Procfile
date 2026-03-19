@@ -1,1 +1,1 @@
-web: python melons.py
+web: python app.py
