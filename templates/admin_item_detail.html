@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="admin-header">
+    <h2><span class="admin-star">★</span> Edit Item: {{ item.name }}</h2>
+    <a href="/admin" class="btn btn-default">&larr; Back to Inventory</a>
+    <a href="/item/{{ item.id }}" class="btn btn-default" target="_blank">View Public Page</a>
+</div>
+
+<div class="admin-edit-container">
+    <div class="admin-edit-preview">
+        <img src="{{ item.imgurl }}" alt="{{ item.name }}" class="admin-preview-img">
+        <p class="text-muted">{{ item.imgurl }}</p>
+    </div>
+    
+    <form method="POST" action="/admin/item/{{ item.id }}/update" class="admin-edit-form">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" id="name" name="name" class="form-control"
+                   value="{{ item.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" class="form-control">
+                {% for cat in categories %}
+                <option value="{{ cat }}" {{ 'selected' if cat == item.category }}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-group-half">
+                <label for="price">Price ($)</label>
+                <input type="number" id="price" name="price" class="form-control"
+                       value="{{ item.price }}" step="0.01" min="0" required>
+            </div>
+            <div class="form-group form-group-half">
+                <label for="stock_count">Stock Count</label>
+                <input type="number" id="stock_count" name="stock_count" class="form-control"
+                       value="{{ item.stock_count }}" min="0" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" 
+                      rows="4">{{ item.description }}</textarea>
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="in_stock" {{ 'checked' if item.in_stock }}>
+                Item is available for purchase
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+            <a href="/admin" class="btn btn-default btn-lg">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,15 +1,15 @@
 # Food Shop
 
-A Flask-based e-commerce demo application for selling food items. This project showcases basic web application functionality including product listings, shopping cart management, and user sessions.
-
-![Food Shop](static/img/sprites/red_apple.png)
+A Flask-based e-commerce demo application for selling food items. This project showcases basic web application functionality including product listings, shopping cart management, user sessions, and an admin inventory dashboard.
 
 ## Features
 
 - **Product Catalog**: Browse a variety of food items organized by category
-- **Product Details**: View detailed information about each item
+- **Product Details**: View detailed information about each item with interactive 3D sprite effects
 - **Shopping Cart**: Add items to cart, adjust quantities, and manage your order
-- **User Sessions**: Log in to personalize your experience
+- **User Authentication**: Log in with credentials verified against the database
+- **Admin Inventory Dashboard**: View stock levels, edit items, and manage inventory (admin only)
+- **Role-Based Access**: Regular users shop; admins access the inventory management panel
 - **Flash Messages**: Receive feedback on your actions
 - **Responsive Design**: Works on desktop and mobile devices
 
@@ -58,21 +58,21 @@ Please support the artist if you use these assets in your own projects!
 
     Place the sprite sheet
 
-    Place the Foods.png sprite sheet (128x96 pixels, 16x16 sprites) in the static/img/ directory.
+    Place the Foods.png sprite sheet (128×96 pixels, 16×16 sprites) in the static/img/ directory.
 
     Parse the sprites
 
     bash
     python parse_sprites.py
 
-    This will extract individual sprite images to static/img/sprites/.
+    This will extract individual sprite images into static/img/sprites/.
 
     Initialize the database
 
     bash
     python init_db.py
 
-    This creates food.db with all the food items.
+    This creates food.db with all food items and the demo accounts shown below.
 
 Running the Application
 Development Mode
@@ -86,135 +86,107 @@ With Custom Port
 bash
 PORT=8080 python app.py
 
-Using Flask CLI
+Demo Accounts
 
-bash
-export FLASK_APP=app.py
-export FLASK_ENV=development
-flask run
+The database ships with two pre-configured accounts for testing:
+
+Role	Email	Password
+Regular User	user@foodshop.com	shopperpass
+Admin	admin@foodshop.com	adminpass
+
+Regular User – user@foodshop.com
+
+    Browse and view all products
+    Add items to the shopping cart
+    Proceed through the (mock) checkout flow
+
+Admin – admin@foodshop.com
+
+    Everything a regular user can do, plus:
+    Access the Inventory Dashboard (/admin) from the navbar
+    View total stock counts, stock value, and per-item quantities
+    Quick-update stock counts directly from the inventory table
+    Open a full edit form for any item (name, price, category, description, stock, availability)
 
 Project Structure
 
 food_shop/
-├── app.py              # Main Flask application
-├── model.py            # Database models and queries
-├── init_db.py          # Database initialization script
-├── parse_sprites.py    # Sprite sheet parser
-├── food.db             # SQLite database (generated)
-├── requirements.txt    # Python dependencies
-├── Procfile            # For deployment (Heroku, etc.)
-├── README.md           # This file
+├── app.py                     # Main Flask application with routes
+├── model.py                   # Database models and queries
+├── init_db.py                 # Database initialization & demo data
+├── parse_sprites.py           # Sprite sheet parser
+├── food.db                    # SQLite database (generated)
+├── requirements.txt           # Python dependencies
+├── Procfile                   # For deployment (Heroku, etc.)
+├── README.md                  # This file
 ├── static/
 │   ├── css/
-│   │   ├── style.css   # Main stylesheet
-│   │   └── cover.css   # Landing page styles
+│   │   ├── style.css          # Main stylesheet
+│   │   └── cover.css          # Landing page styles
 │   └── img/
-│       ├── Foods.png   # Original sprite sheet
-│       └── sprites/    # Extracted sprites (generated)
+│       ├── Foods.png          # Original sprite sheet
+│       └── sprites/           # Extracted sprites (generated)
 └── templates/
-    ├── base.html       # Base template with navbar/footer
-    ├── index.html      # Landing page
-    ├── all_items.html  # Product listing page
-    ├── item_details.html # Single product view
-    ├── cart.html       # Shopping cart
-    └── login.html      # Login form
+    ├── base.html              # Base template with navbar/footer
+    ├── index.html             # Landing page
+    ├── all_items.html         # Product listing page
+    ├── item_details.html      # Single product view
+    ├── cart.html              # Shopping cart
+    ├── login.html             # Login form
+    ├── admin_inventory.html   # Admin inventory dashboard
+    └── admin_item_detail.html # Admin item edit form
 
 Usage Guide
 Browsing Items
 
-    Visit the homepage and click "Shop Now"
-    Browse items by scrolling through the product grid
-    Click on any item to see its details
+    Visit the homepage and click Shop Now
+    Browse items in the product grid
+    Click any item to see its details — hover near the sprite to see the 3D tilt effect
 
-Adding to Cart
+Shopping Cart
 
-    Click "Add to Cart" on any product
-    You'll be redirected to your cart with a confirmation message
+    Click Add to Cart on any product
+    You'll be redirected to your cart with a confirmation
     Adding the same item again increases its quantity
+    Remove individual items or clear the whole cart
 
-Managing Cart
+Admin Inventory (admin@foodshop.com / adminpass)
 
-    View your cart by clicking "My Cart" in the navigation
-    Remove items using the "Remove" button
-    Clear all items with "Clear Cart"
-    Proceed to checkout (demo only - no actual payment)
-
-User Login
-
-    Click "Log In" in the navigation
-    Enter any name, email, and password
-    Note: This is a demo - no actual authentication is performed
+    Log in with admin credentials
+    Click ★ Inventory in the navbar
+    The dashboard shows summary cards (total products, units, value, in/out of stock)
+    Each category section lists items with inline stock editing
+    Click Edit on any row to open the full edit form
+    Changes are saved to the database immediately
 
 Notes
 
     No Payment Processing: The checkout feature is a placeholder. No actual payments are processed.
     Session Storage: Cart data is stored in browser sessions and will be lost when the session expires.
-    Demo Authentication: The login system stores user info in the session without validation.
-
-Development
-Adding New Items
-
-Edit init_db.py and add new entries to the food_items list:
-
-python
-("Category", "Item Name", 9.99, "/static/img/sprites/image.png",
- "Description of the item."),
-
-Then re-run the initialization:
-
-bash
-python init_db.py
-
-Modifying Styles
-
-    static/css/style.css - Main application styles
-    static/css/cover.css - Landing page styles
-
-Template Inheritance
-
-All pages extend base.html which provides:
-
-    Navigation bar
-    Flash message display
-    Footer with credits
-    Common CSS/JS includes
+    Demo Authentication: Passwords are hashed with SHA-256 for this demo. A production application should use bcrypt or argon2.
+    Admin Protection: All /admin/* routes are protected by the @admin_required decorator, which checks both that the user is logged in and that their role is 'admin'.
 
 License
 
 This project is for educational/demonstration purposes.
 
-Pixel art assets are © MelancholyG - please check the original asset page for licensing terms.
+Pixel art assets are © MelancholyG — please check the original asset page for licensing terms.
 
 
----
+The main additions:
 
-## Summary of Changes Made
+1. **Database-backed authentication** – `model.authenticate_customer()` verifies email + SHA-256-hashed password. The old "type any name" form is replaced with a proper credential check.
 
-1. **Fixed the error**: In `login.html`, changed `type="btn btn-lg btn-primary btn-block"` to `class="btn btn-lg btn-primary btn-block"`
+2. **Role system** – The `customers` table has a `role` column (`'user'` or `'admin'`). Session stores the role after login.
 
-2. **Updated Python 2 syntax**: Changed `print melons` to `print()` function calls in `model.py`
+3. **`@login_required` and `@admin_required` decorators** – Protect routes cleanly. Admin routes return a flash + redirect if the user lacks privileges.
 
-3. **Renamed files**:
-   - `melons.py` → `app.py`
-   - `all_melons.html` → `all_items.html`
-   - `melon_details.html` → `item_details.html`
-   - Database: `melons.db` → `food.db`
+4. **Admin inventory dashboard** (`/admin`) – Summary cards showing total products, units, stock value, and in/out-of-stock counts. Per-category tables with inline quick-stock editing and links to a full edit form.
 
-4. **Created new files**:
-   - `parse_sprites.py` - Extracts individual sprites from the sprite sheet
-   - `init_db.py` - Initializes the database with food items
+5. **Admin item editor** (`/admin/item/<id>`) – Full form to change name, price, category, description, stock count, and availability. Updates write through to the database via `model.update_item()`.
 
-5. **Re-themed everything**:
-   - Updated all "melon" references to "food"/"item"
-   - Updated branding from "Ubermelon" to "Food Shop"
-   - Added artist credits throughout
+6. **Demo credentials on the login page** – Clearly displayed so anyone can test both roles. The `name` field was removed from login since authentication now goes through the database.
 
-6. **Implemented missing features**:
-   - Cart removal functionality (`/remove_from_cart/<index>`)
-   - Cart clearing functionality (`/clear_cart`)
-   - Proper session modification tracking
-   - 404 error handling
-   - Stock status display
-
-7. **Updated requirements.txt** for Python 3 and added Pillow for sprite parsing
-
+7. **Two hardcoded demo accounts** created by `init_db.py`:
+   - **User**: `user@foodshop.com` / `shopperpass`  
+   - **Admin**: `admin@foodshop.com` / `adminpass`

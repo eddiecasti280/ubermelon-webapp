@@ -35,6 +35,11 @@ body {
     image-rendering: crisp-edges;
 }
 
+.admin-badge-nav {
+    color: #f0ad4e;
+    margin-right: 3px;
+}
+
 /* ---- Item List / Grid ---- */
 
 #item-list {
@@ -73,13 +78,12 @@ body {
     color: #337ab7;
 }
 
-/* ---- Sprite Wrapper & Shadow (for 3D tilt effect) ---- */
+/* ---- Sprite Wrapper & Shadow (3D tilt effect) ---- */
 
 .sprite-wrapper {
     position: relative;
     display: inline-block;
     margin: 10px 0;
-    /* Ensure children can be positioned */
 }
 
 .sprite-wrapper.large {
@@ -125,7 +129,6 @@ body {
     z-index: 1;
 }
 
-/* Tilt-sprite transition so they ease back to rest */
 .tilt-sprite {
     transition: transform 0.18s ease-out;
     will-change: transform;
@@ -266,7 +269,7 @@ body {
 /* ---- Login ---- */
 
 .login-container {
-    max-width: 400px;
+    max-width: 440px;
     margin: 40px auto;
 }
 
@@ -295,6 +298,240 @@ body {
 .form-signin .disclaimer {
     margin-top: 20px;
     text-align: center;
+}
+
+/* Demo Credentials Display */
+
+.demo-credentials {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.demo-credentials h4 {
+    margin: 0 0 12px;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    text-align: center;
+}
+
+.credential-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+}
+
+.credential-box.admin {
+    border-left: 4px solid #f0ad4e;
+}
+
+.credential-box p {
+    margin: 0 0 3px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.credential-label {
+    font-weight: 700;
+    color: #333 !important;
+    margin-bottom: 6px !important;
+}
+
+.credential-box code {
+    background: #eef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.95em;
+    user-select: all;
+}
+
+.admin-star {
+    color: #f0ad4e;
+}
+
+/* ---- Admin Styles ---- */
+
+.admin-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0ad4e;
+}
+
+.admin-header h2 {
+    margin-top: 0;
+}
+
+.admin-header .btn {
+    margin-right: 8px;
+    margin-top: 5px;
+}
+
+/* Summary Cards */
+
+.admin-summary-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    flex: 1;
+    min-width: 140px;
+    max-width: 200px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px 15px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card.in-stock {
+    border-left: 4px solid #5cb85c;
+}
+
+.summary-card.out-of-stock {
+    border-left: 4px solid #d9534f;
+}
+
+.summary-number {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #333;
+    line-height: 1.2;
+}
+
+.summary-label {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Inventory Table */
+
+.inventory-category {
+    margin-bottom: 35px;
+}
+
+.category-heading {
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.category-count {
+    font-size: 0.6em;
+    color: #999;
+    font-weight: 400;
+}
+
+.inventory-table {
+    font-size: 0.95em;
+}
+
+.inventory-thumb {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.inventory-table .col-img { width: 50px; }
+.inventory-table .col-id { width: 50px; }
+.inventory-table .col-stock { width: 130px; }
+.inventory-table .col-value { width: 90px; }
+.inventory-table .col-status { width: 90px; }
+.inventory-table .col-actions { width: 120px; }
+
+.out-of-stock-row {
+    background-color: #fff5f5 !important;
+}
+
+.out-of-stock-row td {
+    color: #999;
+}
+
+/* Quick Stock Form (inline in table) */
+
+.quick-stock-form {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.stock-input {
+    width: 70px !important;
+    display: inline-block !important;
+    padding: 3px 6px !important;
+    text-align: center;
+}
+
+.stock-btn {
+    padding: 3px 8px;
+    line-height: 1.4;
+}
+
+/* Admin Edit Page */
+
+.admin-edit-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.admin-edit-preview {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.admin-preview-img {
+    width: 128px;
+    height: 128px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border: 2px solid #ddd;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.admin-edit-form {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-group-half {
+    flex: 1;
+}
+
+.form-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.form-actions .btn {
+    margin-right: 10px;
 }
 
 /* ---- Footer ---- */
@@ -355,5 +592,23 @@ body {
     .cart-actions .btn {
         display: block;
         margin: 10px 0;
+    }
+
+    .admin-summary-cards {
+        justify-content: center;
+    }
+
+    .summary-card {
+        min-width: 120px;
+    }
+
+    .admin-edit-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
     }
 }

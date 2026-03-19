@@ -3,30 +3,38 @@
 <div class="login-container">
     <form class="form-signin" method="POST" action="/login">
         <h2 class="form-signin-heading">Please Sign In</h2>
-        <p class="text-muted">Enter your details to access your account.</p>
+        <p class="text-muted">Enter your credentials to access your account.</p>
         
         <div class="form-group">
-            <label for="name" class="sr-only">Name</label>
-            <input type="text" id="name" name="name" class="form-control" 
-                   placeholder="Your Name" required autofocus />
-        </div>
-        
-        <div class="form-group">
-            <label for="email" class="sr-only">Email Address</label>
+            <label for="email">Email Address</label>
             <input type="email" id="email" name="email" class="form-control" 
-                   placeholder="Email Address" required />
+                   placeholder="you@example.com" required autofocus />
         </div>
         
         <div class="form-group">
-            <label for="password" class="sr-only">Password</label>
+            <label for="password">Password</label>
             <input type="password" id="password" name="password" class="form-control" 
                    placeholder="Password" required />
         </div>
         
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
         
+        <div class="demo-credentials">
+            <h4>Demo Accounts</h4>
+            <div class="credential-box">
+                <p class="credential-label">Regular User</p>
+                <p><strong>Email:</strong> <code>user@foodshop.com</code></p>
+                <p><strong>Password:</strong> <code>shopperpass</code></p>
+            </div>
+            <div class="credential-box admin">
+                <p class="credential-label">Admin <span class="admin-star">★</span></p>
+                <p><strong>Email:</strong> <code>admin@foodshop.com</code></p>
+                <p><strong>Password:</strong> <code>adminpass</code></p>
+            </div>
+        </div>
+        
         <p class="text-muted disclaimer">
-            <small>Note: This is a demo application. No actual authentication is performed.</small>
+            <small>This is a demo application. No real data is collected or stored beyond the session.</small>
         </p>
     </form>
 </div>
